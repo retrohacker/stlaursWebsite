@@ -1,0 +1,1 @@
+<?php $db=new mysqli("stlaurs.db.9635172.hostedresource.com","stlaurs","Researchers1!","stlaurs"); ?>

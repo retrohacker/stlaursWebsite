@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>St. Louis Area Undergraduate Research Symposium</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" href="http://www.stlaurs.com/styles/main.css" />
+<style>
+.feedbackInput,.textInput{color:inherit;border:1px solid #ddd;padding:5px;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px}
+.textInput{width:500px;height:210px;}
+#apply{margin:10px 0;border:1px solid rgb(150,150,150);padding:7px 15px;background-color:rgb(230,230,230);font:13px Arial bold;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px}
+#apply:hover{background-color:rgb(200,200,200);}
+label{font-size;13px;color:#666;display:block;line-height:1.5;}
+#first{width:140px;margin-right:10px;}
+#last{width:205px;}
+#email{width:370px;}
+#feedback{display:inline;margin-left:40px;}
+</style>
+<script>
+function checkLimit(){
+	var regex=/\S+/g;
+	var matches=this.value.match(regex);
+	matches=(matches==null)?0:matches.length;
+	var spans=this.parentNode.getElementsByTagName("span");	
+	var counter;
+	for(i=0,y=spans.length;i<y;i++){
+		if(spans[i].className=="counter")
+			counter=spans[i];
+			break;
+	}
+	counter.innerHTML=matches+"/300";
+	if(matches>300) return true;
+	else return false;
+}
+
+function load(){
+var textareas=document.getElementsByTagName("textarea");
+var toUse=new Array();
+	for(i=0,y=textareas.length;i<y;i++){
+		if(textareas[i].className=="textInput"){
+			textareas[i].checkLimit=checkLimit;
+			textareas[i].addEventListener("keyup",this.checkLimit,false);
+			textareas[i].addEventListener("paste",this.checkLimit,false);
+		}
+	}
+}
+
+window.addEventListener("DOMContentLoaded",load,false);
+</script>
+<script>
+Form={
+
+loaded:0,
+
+	invalid:function(ele){
+		if(ele.id=="resume"){
+			ele.parentNode.parentNode.style.borderColor="#f00";
+			ele.addEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else if(ele.id=="university"){
+			ele.style.borderColor="#f00";
+			ele.addEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else{
+			ele.style.borderColor="#f00";
+			ele.addEventListener("keypress",function(){Form.removeCheck(this);},false);
+		}
+	},	
+	
+	removeCheck:function(ele){
+		if(ele.id=="resume"){
+			ele.parentNode.parentNode.style.borderColor="#ddd";
+			ele.removeEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else if(ele.id=="university"){
+			ele.style.borderColor="#ddd";
+			ele.addEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else{
+			ele.style.borderColor="#ddd";
+			ele.removeEventListener("keypress",function(){Form.removeCheck(this);},false);
+		}
+	},
+
+	validate:function(){
+		var ele;
+		var valid=true;
+		for(i=0,y=arguments.length;i<y;i++){
+			ele=document.getElementById(arguments[i]);
+			if(ele.value=="" && ele.style.borderColor!="#f00"){
+				this.invalid(ele);
+				valid=false;
+			}
+		}
+		
+		ele=document.getElementById("question1");
+		if(ele.checkLimit() && ele.style.borderColor!="#f00"){
+			this.invalid(ele);
+			valid=false
+		}
+		
+		ele=document.getElementById("question2");
+		if(ele.checkLimit() && ele.style.borderColor!="#f00"){
+			this.invalid(ele);
+			valid=false
+		}
+		
+		if(!valid)
+			document.getElementById("feedback").innerHTML="Please correct your application.";
+		
+		return valid;
+
+	},
+
+	upload:function(){
+		var regex=/.doc$|.docx$|.pdf$|.odt$|.rtf$/;
+		if(regex.test(document.getElementById("resume").value)){
+			document.getElementById("feedback").innerHTML="Uploading resume...";
+			var email=document.getElementById("email");
+			var fUpload=document.getElementById("fUpload");
+			if(email.value!="") fUpload.appendChild(email.cloneNode(true));
+			fUpload.submit();
+		}
+		else
+			document.getElementById("feedback").innerHTML="It needs to be a word, pdf, odt, or rtf file";
+
+	},
+	
+	uploaded:function(){
+		if(++this.loaded>1){
+			document.getElementById("feedback").innerHTML="Resume uploaded.";
+		}
+	},
+	
+	reset:function(){
+		document.getElementById("first").value="";
+		document.getElementById("last").value="";
+		document.getElementById("email").value="";
+		document.getElementById("resume").value="";
+		document.getElementById("university").value="";
+		document.getElementById("question1").value="";
+		document.getElementById("question2").value="";
+	},
+	
+	submit:function(){
+		document.getElementById("feedback").innerHTML="Checking application...";
+	
+		if(!this.validate("first","last","email","resume","university")) return;
+		
+		this.upload();
+		
+		document.getElementById("feedback").innerHTML="Submitting application...";
+				
+		var first=document.getElementById("first");
+		var last=document.getElementById("last");
+		var email=document.getElementById("email");
+		var resume=document.getElementById("resume");
+		var university=document.getElementById("university");
+		var q1=document.getElementById("question1");
+		var q2=document.getElementById("question2");
+	
+		var xhreq=new XMLHttpRequest();
+		xhreq.open("POST", "http://www.stlaurs.com/apply/panel/apply.php", true);
+		xhreq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		alert(q2.value);
+		xhreq.send("fName="+first.value+"&lName="+last.value+"&email="+email.value+"&resume="+escape(resume.value)+"&university="+escape(university.value)+"&question1="+escape(q1.value)+"&question2="+escape(q2.value));
+		xhreq.onreadystatechange=function(){if(xhreq.readyState==4 && xhreq.status==200){
+			if(xhreq.responseText=="1"){
+				Form.reset();
+				document.getElementById("feedback").innerHTML="Your application process is complete!";
+			}
+			else document.getElementById("feedback").innerHTML="Uh oh! Something went wrong with your application.";
+		}}
+	}
+	
+}
+</script>
+</head>
+<body>
+<div id="grayStrip">
+	<div id="paper">
+		<div style="text-align:center;"><a href="http://www.stlaurs.com"><img src="http://www.stlaurs.com/img/banner.png" /></a></div>
+		<div id="contributors"></div>
+		<div id="header">
+			<script src="http://www.stlaurs.com/scripts/header.js"></script>
+			<div id="cornerLeft"></div>
+			<div id="cornerRight"></div>
+		</div>
+		<div id="content">
+			<h2>St. Louis Area Undergraduate Research Panel Application</h2>
+			If you enjoyed your experience at this year's STLAURS, please consider applying to become a member of the St. Louis Area 
+			Undergraduate Research Panel. The panel consists of two undergraduate students from each participating school who are charged 
+			with planning the STLAURS for the upcoming year. This is a great opportunity to meet other students, interact with important 
+			faculty from different schools in the area, and gain experience in organizing important events. If you are interested in 
+			applying, please fill out the following form:
+			
+			<p>
+				<label for="first">Name</label>
+				<input type="text" id="first" class="feedbackInput" placeholder="First Name" />
+				<input type="text" id="last" class="feedbackInput" placeholder="Last Name" />
+			</p>
+			
+			<p>
+				<label for="email">Email</label>
+				<input type="text" id="email" name="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<select id="university" class="feedbackInput">
+					<option value="">Select your current university</option>
+					<option value="Southern Illinois University Carbondale">Southern Illinois University Carbondale</option>
+					<option value="St. Louis University">St. Louis University</option>
+					<option value="University of Missouri">University of Missouri at St. Louis</option>
+					<option value="St Louis College of Pharmacy">St. Louis College of Pharmacy</option>
+					<option value="Washington University">Washington University at St. Louis</option>
+					<option value="Webster University">Webster University</option>
+					<option value="Southern Illinois University Edwardsville">Southern Illinois University Edwardsville</option>
+				</select>
+			</p>
+			
+			<p>
+				Upload Your Resume
+				<div class="feedbackInput" style="display:inline-block;"><form method="post" id="fUpload" enctype="multipart/form-data" action="upload.php" target="iUpload"><input type="file" name="resume" id="resume" /></form></div>
+			</p>
+			
+			<p>
+				<div>
+					<div>Describe your previous experience(s) at STLAURS (<span class="counter">Max 300</span> words)</div>
+					<textarea class="textInput" id="question1"></textarea>
+				</div>
+			</p>
+			
+			<p>
+				<div>
+					<div>In your opinion, what is the purpose of STLAURS? What should the event accomplish? (<span class="counter">Max 300</span> words)</div>
+					<textarea class="textInput" id="question2"></textarea>
+				</div>
+			</p>
+			
+			<iframe id="iUpload" name="iUpload" src="" onload="Form.uploaded()" style='width:0;height:0;border:0;'></iframe>
+			
+			<input type="button" value="Apply" id="apply" onclick="Form.submit();" /><h2 id="feedback"></h2>
+		</div>
+	</div>
+</div>
+</body></html>

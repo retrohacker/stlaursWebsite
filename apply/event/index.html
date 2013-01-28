@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>St. Louis Area Undergraduate Research Symposium</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" href="http://www.stlaurs.com/styles/main.css" />
+<style>
+.feedbackInput,.textInput{color:inherit;border:1px solid #ddd;padding:5px;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px}
+.textInput{width:500px;height:210px;}
+input[type=text]{width:370px;}
+#apply{margin:10px 0;border:1px solid rgb(150,150,150);padding:7px 15px;background-color:rgb(230,230,230);font:13px Arial bold;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px}
+#apply:hover{background-color:rgb(200,200,200);}
+label{font-size;13px;color:#666;display:block;line-height:1.5;}
+#feedback{display:inline;margin-left:40px;}
+.divider{width:100%;height:15px;border-bottom:1px solid #000;margin-bottom:30px;}
+</style>
+<script>
+function checkLimit(){
+	var regex=/\S+/g;
+	var matches=this.value.match(regex);
+	matches=(matches==null)?0:matches.length;
+	var spans=this.parentNode.getElementsByTagName("span");	
+	var counter;
+	for(i=0,y=spans.length;i<y;i++){
+		if(spans[i].className=="counter")
+			counter=spans[i];
+			break;
+	}
+	counter.innerHTML=matches+"/300";
+	if(matches>300) return true;
+	else return false;
+}
+
+function load(){
+var textareas=document.getElementsByTagName("textarea");
+var toUse=new Array();
+	for(i=0,y=textareas.length;i<y;i++){
+		if(textareas[i].className=="textInput"){
+			textareas[i].checkLimit=checkLimit;
+			textareas[i].addEventListener("keyup",this.checkLimit,false);
+			textareas[i].addEventListener("paste",this.checkLimit,false);
+		}
+	}
+}
+
+window.addEventListener("DOMContentLoaded",load,false);
+</script>
+<script>
+Form={
+
+loaded:0,
+
+	invalid:function(ele){
+		if(ele.id=="resume"){
+			ele.parentNode.parentNode.style.borderColor="#f00";
+			ele.addEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else if(ele.id=="university"){
+			ele.style.borderColor="#f00";
+			ele.addEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else{
+			ele.style.borderColor="#f00";
+			ele.addEventListener("keypress",function(){Form.removeCheck(this);},false);
+		}
+	},	
+	
+	removeCheck:function(ele){
+		if(ele.id=="resume"){
+			ele.parentNode.parentNode.style.borderColor="#ddd";
+			ele.removeEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else if(ele.id=="university"){
+			ele.style.borderColor="#ddd";
+			ele.addEventListener("change",function(){Form.removeCheck(this);},false);
+		}
+		else{
+			ele.style.borderColor="#ddd";
+			ele.removeEventListener("keypress",function(){Form.removeCheck(this);},false);
+		}
+	},
+
+	validate:function(){
+		var ele;
+		var valid=true;
+		for(i=0,y=arguments.length;i<y;i++){
+			ele=document.getElementById(arguments[i]);
+			if(ele.value=="" && ele.style.borderColor!="#f00"){
+				this.invalid(ele);
+				valid=false;
+			}
+		}
+		
+		ele=document.getElementById("question1");
+		if(ele.checkLimit() && ele.style.borderColor!="#f00"){
+			this.invalid(ele);
+			valid=false
+		}
+		
+		ele=document.getElementById("question2");
+		if(ele.checkLimit() && ele.style.borderColor!="#f00"){
+			this.invalid(ele);
+			valid=false
+		}
+		
+		if(!valid)
+			document.getElementById("feedback").innerHTML="Please correct your application.";
+		
+		return valid;
+
+	},
+
+	upload:function(){
+		var regex=/.doc$|.docx$|.pdf$|.odt$|.rtf$/;
+		if(regex.test(document.getElementById("resume").value)){
+			document.getElementById("feedback").innerHTML="Uploading resume...";
+			document.getElementById("fUpload").submit();
+		}
+		else
+			document.getElementById("feedback").innerHTML="It needs to be a word, pdf, odt, or rtf file";
+
+	},
+	
+	uploaded:function(){
+		if(++this.loaded>1){
+			document.getElementById("feedback").innerHTML="Resume uploaded.";
+		}
+	},
+	
+	reset:function(){
+		document.getElementById("first").value="";
+		document.getElementById("last").value="";
+		document.getElementById("email").value="";
+		document.getElementById("resume").value="";
+		document.getElementById("university").value="";
+		document.getElementById("question1").value="";
+		document.getElementById("question2").value="";
+	},
+	
+	submit:function(){
+		document.getElementById("feedback").innerHTML="Checking application...";
+	
+		if(!this.validate("first","last","email","resume","university")) return;
+		
+		this.upload();
+		
+		document.getElementById("feedback").innerHTML="Submitting application...";
+				
+		var first=document.getElementById("first");
+		var last=document.getElementById("last");
+		var email=document.getElementById("email");
+		var resume=document.getElementById("resume");
+		var university=document.getElementById("university");
+		var q1=document.getElementById("question1");
+		var q2=document.getElementById("question2");
+	
+		var xhreq=new XMLHttpRequest();
+		xhreq.open("POST", "http://www.stlaurs.com/apply/panel/apply.php", true);
+		xhreq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhreq.send("fName="+first.value+"&lName="+last.value+"&email="+email.value+"&resume="+escape(resume.value)+"&university="+escape(university.value)+"&question1="+escape(q1.value)+"&question2="+escape(q2.value));
+		xhreq.onreadystatechange=function(){if(xhreq.readyState==4 && xhreq.status==200){
+			if(xhreq.responseText=="1"){
+				Form.reset();
+				document.getElementById("feedback").innerHTML="Your application process is complete!";
+			}
+			else document.getElementById("feedback").innerHTML="Uh oh! Something went wrong with your application.";
+		}}
+	}
+	
+}
+</script>
+</head>
+<body>
+<div id="grayStrip">
+	<div id="paper">
+		<div style="text-align:center;"><a href="http://www.stlaurs.com"><img src="http://www.stlaurs.com/img/banner.png" /></a></div>
+		<div id="contributors"></div>
+		<div id="header">
+			<script src="http://www.stlaurs.com/scripts/header.js"></script>
+			<div id="cornerLeft"></div>
+			<div id="cornerRight"></div>
+		</div>
+		<div id="content">
+			<h2>2013 STLAURS Application<br />SUBMISSION DEADLINE is Monday, April 1, 2013 at 9 a.m.</h2>
+			<div class="divider"></div>
+			
+			<span style="color:#f00;">
+				<div style="font-size:16px;font-weight:bold;">Student Information</div>
+				If multiple undergraduate students are authors on one project, only ONE submission should be made. The lead student author should be the applicant and should plan to attend the event.
+			</span>
+			
+			<p>
+				<label for="first">Name</label>
+				<input type="text" id="first" class="feedbackInput" placeholder="First Name" /><br />
+				<input type="text" id="last" class="feedbackInput" placeholder="Last Name" />
+			</p>
+				
+			<p>
+				<label for="email">Email</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">Phone Number</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">Street Address</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">City</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">State</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">Zip Code</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<select id="university" class="feedbackInput">
+					<option value="">Select your current university</option>
+					<option value="Southern Illinois University Carbondale">Southern Illinois University Carbondale</option>
+					<option value="St. Louis University">St. Louis University</option>
+					<option value="University of Missouri">University of Missouri at St. Louis</option>
+					<option value="St Louis College of Pharmacy">St. Louis College of Pharmacy</option>
+					<option value="Washington University">Washington University at St. Louis</option>
+					<option value="Webster University">Webster University</option>
+					<option value="Southern Illinois University Edwardsville">Southern Illinois University Edwardsville</option>
+				</select>
+			</p>
+
+			<p>
+				<select id="university" class="feedbackInput">
+					<option value="">Select your current discipline</option>
+					<option value="Anatomy">Anatomy</option>
+					<option value="Anthropology">Anthropology</option>
+					<option value="Biology">Biology</option>
+					<option value="Biochemistry">Biochemistry</option>
+					<option value="Business">Business</option>
+					<option value="Criminology/Criminal Justice">Criminology/Criminal Justice</option>
+					<option value="Chemistry">Chemistry</option>
+					<option value="Engineering">Engineering</option>
+					<option value="Kinesiology">Kinesiology</option>
+					<option value="Marketing">Marketing</option>
+					<option value="Neuroscience">Neuroscience</option>
+					<option value="Nursing">Nursing</option>
+					<option value="Philosophy">Philosophy</option>
+					<option value="Physics">Physics</option>
+					<option value="Physiology">Physiology</option>
+					<option value="Psychology">Psychology</option>
+					<option value="Political Science">Political Science</option>
+					<option value="Sociology/Social Work">Sociology/Social Work</option>
+					<option value="Zoology">Zoology</option>
+					<option value="Other">Other</option>
+				</select>
+			</p>
+			
+			<p>
+				Please include a recent, semi-professional photo of yourself for our event program.
+				<div class="feedbackInput" style="display:inline-block;"><form method="post" id="fUpload" enctype="multipart/form-data" action="upload.php" target="iUpload"><input type="file" name="resume" id="resume" /></form></div>
+			</p>
+			
+			<div style="width:100%;height:15px;border-bottom:1px solid #000;margin-bottom:30px;"></div>
+			
+			<div style="font-size:16px;font-weight:bold;color:#f00;">Mentor Information</div>
+			
+			<p>
+				<label for="email">Mentor First Name</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">Mentor Last Name</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">Mentor Department</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">Mentor Email</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				<label for="email">Mentor Phone Number</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				We have a limited ability to provide lunch for a small number of mentors. These
+				will be assigned on a first-come-first-serve basis. Please indicate if your mentor
+				will be coming to any portion of the event and also if your mentor would like to
+				stay for lunch. We will confirm lunch availability for mentors after the application
+				deadline has passed.
+			</p>
+			
+			<p>
+				Will your mentor be attending the event?<br />
+				<input type="radio" name="mentor_attending" />Yes<br />
+				<input type="radio" name="mentor_attending" />No
+			</p>
+			
+			<p>
+				Would your mentor like to be considered for lunch?<br />
+				<input type="radio" name="mentor_lunch" />Yes<br />
+				<input type="radio" name="mentor_lunch" />No
+			</p>
+			
+			<div style="width:100%;height:15px;border-bottom:1px solid #000;margin-bottom:30px;"></div>
+			
+			<div style="font-size:16px;font-weight:bold;color:#f00;">Project Information</div>
+
+			<p>
+				<label for="email">Project Title</label>
+				<input type="text" id="email" class="feedbackInput" />
+			</p>
+			
+			<p>
+				Project Abstract (Limit your abstract to 150 words or fewer.)  
+				<div class="feedbackInput" style="display:inline-block;"><form method="post" id="fUpload" enctype="multipart/form-data" action="upload.php" target="iUpload"><input type="file" name="resume" id="resume" /></form></div>
+			</p>
+
+			<p>
+				If multiple undergraduate students are authors on this project, please list their
+				names, in order of authorship credit, and also indicate which ones will be in attendance
+				at the event. It’s critical that we get an accurate headcount for lunch.
+			</p>
+			
+			<p>
+				Author 1<br />
+				<input type="text" class="feedbackInput" /><br />
+				Attending? <input type="radio" name="attending1" />Yes  <input type="radio" name="attending1" />No
+			</p>
+
+			<p>
+				Author 2<br />
+				<input type="text" class="feedbackInput" /><br />
+				Attending? <input type="radio" name="attending2" />Yes  <input type="radio" name="attending2" />No
+			</p>
+
+			<p>
+				Author 3<br />
+				<input type="text" class="feedbackInput" /><br />
+				Attending? <input type="radio" name="attending3" />Yes  <input type="radio" name="attending3" />No
+			</p>
+
+			<p>
+				Author 4<br />
+				<input type="text" class="feedbackInput" /><br />
+				Attending? <input type="radio" name="attending4" />Yes  <input type="radio" name="attending4" />No
+			</p>
+
+			<p style="color:#f00;">
+				If there are more than 4 authors, please add the name(s) in the box below.  Also indicate
+				by typing 'yes' or 'no' after the name if he or she will be attending the event.
+			</p>
+			
+			<p>
+				Presentation Format<br />
+				<input type="radio" name="presentation_format" />Poster Presentation<br />
+				<input type="radio" name="presentation_format" />Verbal Presentation
+			</p>
+			
+			<p>
+				Students have the option of submitting their application as an oral presentation, and a small number will
+				be invited to do so.  Those who are not invited to give an oral presentation will automatically be considered
+				applicants for a poster presentation.  Oral presentations should be 8-10 minutes in length with five additional
+				minutes for a question-and-answer period. PowerPoint may be used. Speakers who are confirmed for their presentation
+				should make arrangements with Elisabeth Jones to make sure their presentation formats will work. Speakers are highly
+				encouraged to arrive early to the event to confirm that all A/V materials are compatible and working for their
+				specific presentation.  Laptops and projectors will be provided.
+			</p>
+			
+			<p>
+				Due to space limitations, only a limited number of students requesting to give oral talks will be invited
+				to do so. Presentations will be chosen based on the quality of the abstract and research, and on variety
+				from the perspective of the entire event and highlighting work from each participating institution.
+			</p>
+			
+			<p>
+				In the past, students have needed additional equipment to adequately display their projects. Please mark
+				below all that would apply: 
+				<br />
+				Note:<br />
+				<b>For Poster Presentations & Displays</b>: sticky tack will be provided for posters to be hung on the walls. If
+				your poster is too heavy to be kept aloft with sticky tack, please request an easel.  30 Easels are
+				available free of charge, they will be assigend on a first-come-first-serve basis.  If you are not assigned
+				an easel, you may bring your own or reformat your poster so that it can be affixed to the with sticky tack
+				(i.e., do not attach your poster to a heavy cardboard backing, that will make it too heavy to affix to the
+				wall with sticky tack).  Please contact Elisabeth Jones at elijone@siue.edu if you have any questions.
+				<br />
+				<b>For Oral Presentations</b>: a laptop with PowerPoint capabilities, projector and screen will be provided. You
+				will need to e-mail your presentation in advance to Elisabeth Jones. Please bring a back up on a flash drive!!
+			</p>
+			
+			<p>
+				Additional Items Requested<br />
+				<input type="radio" name="items_requested" />Easel<br />
+				<input type="radio" name="items_requested" />Display Table<br />
+				<input type="radio" name="items_requested" />Other (Please specify)
+			</p>
+			
+			
+			<iframe id="iUpload" name="iUpload" src="" onload="Form.uploaded()" style='width:0;height:0;border:0;'></iframe>
+			
+			<input type="button" value="Apply" id="apply" onclick="Form.submit();" /><h2 id="feedback"></h2>
+		</div>
+	</div>
+</div>
+</body></html>

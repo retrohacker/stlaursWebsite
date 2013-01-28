@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>St. Louis Area Undergraduate Research Symposium</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" href="http://www.stlaurs.com/styles/main.css" />
+<style>
+#schedule{float:left;margin-top:35px;text-align:left;border-spacing:20px 0;margin-right:20px;border-spacing:40px 4px;}
+#schedule .head td{font-weight:bold;font-style:italic;text-align:center;}
+#schedule tr td:first-child{font-weight:bold;}
+#calendarContainer{width:250px;float:left;}
+#calendar{border-collapse:collapse;width:100%;font-size:9pt;cursor:default;}
+#calendar td{position:relative;border:1px solid #aaa;text-align:center;width:150px;height:28px;}
+#calendar .head td{height:auto;padding:10px 0;border:0;font-weight:bold;font-family:Courier New;}
+#month{text-align:center;font-family:arial;font-size:13pt;font-weight:bold;}
+</style>
+<script>
+var Calendar={
+	day:27,
+	month:4,
+	year:2013,
+
+	isLeapYear:function(Year){
+		if(((Year % 4)==0) && ((Year % 100)!=0) || ((Year % 400)==0))
+			return true;
+		else 
+			return false;
+	},
+
+	getDaysInMonth:function(month,year){
+		var days;
+
+		switch(month){
+			case 1: case 3: case 5: case 7: case 8: case 10: case 12:days=31; break;
+			case 4: case 6: case 9: case 11:days=30; break;
+			default:days=25; break;
+		}
+		if(month==2){
+			if(this.isLeapYear(year))
+				days=29;
+			else
+				days=28;
+		}
+		return days;
+	},
+
+	updateTitle:function(){
+		var month=document.getElementById("month");
+
+		switch(this.month){
+			case 1:month.innerHTML="January";	break;
+			case 2:month.innerHTML="February";	break;
+			case 3:month.innerHTML="March";		break;
+			case 4:month.innerHTML="April";		break;
+			case 5:month.innerHTML="May";		break;
+			case 6:month.innerHTML="June";		break;
+			case 7:month.innerHTML="July";		break;
+			case 8:month.innerHTML="August";	break;
+			case 9:month.innerHTML="September";	break;
+			case 10:month.innerHTML="October";	break;
+			case 11:month.innerHTML="November";	break;
+			case 12:month.innerHTML="December";	break;
+		}
+	},
+
+	display:function(){
+		Calendar.updateTitle();
+
+		var tds=document.getElementById("calendar").getElementsByTagName("td");
+		var FoM=new Date(Calendar.year,Calendar.month-1,1);
+		var start=FoM.getDay()+7;
+		var dim=Calendar.getDaysInMonth(Calendar.month,Calendar.year);
+		dim+=start;
+		var prevMonth=(Calendar.month-1==0)?12:Calendar.month-1;
+		var prevDim=Calendar.getDaysInMonth(prevMonth,Calendar.year);
+		var prevStart=start-1;
+		var today=Calendar.day+start-1;
+		
+		for(i=6;i<prevStart;prevStart--,prevDim--){
+			tds[prevStart].innerHTML=prevDim;
+			tds[prevStart].style.backgroundColor="#ddd";
+		}
+		
+		for(start,i=0;start<dim;start++){
+			tds[start].innerHTML=++i;
+		}
+		
+		for(i=0;start<tds.length;start++){
+			tds[start].innerHTML=++i;
+			tds[start].style.backgroundColor="#ddd";
+		}
+		
+		tds[today].style.background="rgb(200,250,210)";
+	}
+
+}
+
+window.onload=Calendar.display;
+</script>
+</head>
+<body>
+<div id="grayStrip">
+	<div id="paper">
+		<div style="text-align:center;"><a href="http://www.stlaurs.com"><img src="http://www.stlaurs.com/img/banner.png" /></a></div>
+		<div id="contributors">
+		</div>
+		<div id="header">
+			<script src="http://www.stlaurs.com/scripts/header.js"></script>
+			<div id="cornerLeft"></div>
+			<div id="cornerRight"></div>
+		</div>
+		<div id="content">
+			<div style="text-align:center;">
+				<h2 style="text-decoration:underline;">2013 STLAURS SCHEDULE</h2>
+				Saturday, April 27, 2013 from 8 a.m. to 2 p.m.<br />
+				Southern Illinois University Edwardsville, Morris University Center (MUC)
+				<br /><br />
+				<table id="schedule">
+					<tr class="head">
+						<td>When!</td>
+						<td>Where?</td>
+						<td>Why?!</td>
+					</tr>
+					<tr>
+						<td>8:00-9:00</td>
+						<td>Goshen Lounge<br />MUC Conference Center</td>
+						<td>Registration and Continental Breakfast<br />Poster set-up</td>
+					</tr>
+					<tr>
+						<td>9:00-9:15</td>
+						<td>Meridian Ballroom</td>
+						<td>Opening Remarks</td>
+					</tr>
+					<tr>
+						<td>9:30-11:00</td>
+						<td>Conference Center Rooms</td>
+						<td>Student Poster & Verbal Presentations</td>
+					</tr>
+					<tr>
+						<td>11:15-12:00</td>
+						<td>Meridian Ballroom</td>
+						<td>Keynote Speaker</td>
+					</tr>
+					<tr>
+						<td>12:00-1:00</td>
+						<td>University Restaurant</td>
+						<td>Lunch!</td>
+					</tr>
+					<tr>
+						<td>1:00-2:00</td>
+						<td>Meridian Ballroom</td>
+						<td>Awards Ceremony<br />Closing Remarks<!-- by SIUE URCA Coordinator Dr. Laura Pawlow--></td>
+					</tr>
+				</table>
+				<div id="calendarContainer">
+					<div id="month"></div> 
+					<table id="calendar">
+						<tr class="head"><td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td></tr>
+						<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+						<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+						<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+						<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+						<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body></html>
