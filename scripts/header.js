@@ -40,6 +40,44 @@ function setSponsorSchoolWidth() {
 	setContributorChildrenWidth(width);
 }
 
+function linkify(name,href){
+	var ele=document.createElement("a");
+	if(location.href==href) ele.style.backgroundColor="#1A344B";
+	ele.innerHTML=name;
+	ele.href=href;
+	document.getElementById("header").appendChild(ele);
+}
+
+function getCSS() {
+	url = "http://"+window.location.host+"/";
+	getCSS(gUrl+"styles/main.css");
+
+	var $ = document; // shortcut
+	var cssId = 'stlaursCSS';  // you could encode the css path itself to generate id..
+	if (!$.getElementById(cssId))
+	{
+		var head  = $.getElementsByTagName('head')[0];
+		var link  = $.createElement('link');
+		link.id   = cssId;
+		link.rel  = 'stylesheet';
+		link.type = 'text/css';
+		link.href = url;
+		link.media = 'all';
+		head.appendChild(link);
+	}
+}
+
+gUrl = "http://"+window.location.host+"/";
+
+linkify("Home",gUrl);
+linkify("Keynote Speaker",gUrl+"speaker/");
+linkify("Event Schedule",gUrl+"schedule/");
+linkify("Guidelines",gUrl+"guidelines/");
+linkify("Awards",gUrl+"awards/");
+linkify("Contact",gUrl+"contact/");
+linkify("Get Involved",gUrl+"getInvolved/");
+linkify("Panel Application",gUrl+"apply/panel/");
+
 sponsorSchool("Southern Illinois University at Carbondale","http://www.siu.edu");
 sponsorSchool("St. Louis University","http://www.slu.edu");
 sponsorSchool("University of Missouri at Columbia","http://www.missouri.edu/");
@@ -49,20 +87,3 @@ sponsorSchool("Webster<br />University","http://www.webster.edu/");
 sponsorSchool("Southern Illinois University at Edwardsville","http://www.siue.edu");
 
 setSponsorSchoolWidth();
-
-function linkify(name,href){
-	var ele=document.createElement("a");
-	if(location.href==href) ele.style.backgroundColor="#1A344B";
-	ele.innerHTML=name;
-	ele.href=href;
-	document.getElementById("header").appendChild(ele);
-}
-
-linkify("Home","http://www.stlaurs.com/");
-linkify("Keynote Speaker","http://www.stlaurs.com/speaker/");
-linkify("Event Schedule","http://www.stlaurs.com/schedule/");
-linkify("Guidelines","http://www.stlaurs.com/guidelines/");
-linkify("Awards","http://www.stlaurs.com/awards/");
-linkify("Contact","http://www.stlaurs.com/contact/");
-linkify("Get Involved","http://www.stlaurs.com/getInvolved/");
-linkify("Panel Application","http://www.stlaurs.com/apply/panel/");
