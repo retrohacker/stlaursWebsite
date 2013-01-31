@@ -3,25 +3,54 @@
 <head>
 <title>St. Louis Area Undergraduate Research Symposium</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" href="http://www.stlaurs.com/styles/main.css" />
 <style>
 #content{line-height:1.5;}
 </style>
+<script>
+//Lets load the CSS!
+function getCSS() {
+	url = "http://"+window.location.host+"/styles/main.css";
+
+	var $ = document; // shortcut
+	var cssId = 'stlaursCSS';  // you could encode the css path itself to generate id..
+	if (!$.getElementById(cssId))
+	{
+		var head  = $.getElementsByTagName('head')[0];
+		var link  = $.createElement('link');
+		link.id   = cssId;
+		link.rel  = 'stylesheet';
+		link.type = 'text/css';
+		link.href = url;
+		link.media = 'all';
+		head.appendChild(link);
+	}
+}
+
+getCSS();
+</script>
 </head>
 <body>
 <div id="grayStrip">
 	<div id="paper">
-		<div style="text-align:center;"><a href="http://www.stlaurs.com"><img src="http://www.stlaurs.com/img/banner.png" /></a></div>
+		<div style="text-align:center;"><a href="../"><img src="../img/banner.png" /></a></div>
 		<div id="contributors">
 		</div>
 		<div id="header">
-			<script src="http://www.stlaurs.com/scripts/header.js"></script>
+		<script>
+			var js = document.createElement("script");
+			var gUrl = "http://"+window.location.host+"/";
+
+			js.type = "text/javascript";
+			js.src = gUrl+"scripts/header.js";
+
+			document.body.appendChild(js);
+		</script>
 			<div id="cornerLeft"></div>
 			<div id="cornerRight"></div>
 		</div>
 		<div id="content">
 		<h2>Guidelines</h2>
-		<img src="http://www.stlaurs.com/img/presentation.jpg" style="width:168px;height:126px;float:left;border:1px solid;border-color:#ccc #aaa #aaa #ccc;padding:3px;margin-right:10px;" /><div class="boldUnderline">Poster Presentations</div>
+		<img src="../img/presentation.jpg" style="width:168px;height:126px;float:left;border:1px solid;border-color:#ccc #aaa #aaa #ccc;padding:3px;margin-right:10px;" /><div class="boldUnderline">Poster Presentations</div>
 		The majority of symposium participants present their research or creative project with a poster. Posters should be approximately four feet wide and three feet tall. Posters can be printed or assembled.
 
 		<p><b>Presenters must be available to discuss their displays during their assigned poster session.</b> A few specifics on the poster boards: posters must be readable from at least three feet away, the presentation title must be at least two inches high, and beneath the title, the name(s) of the student author(s), faculty advisor, and home institution must be at least one inch high. STLAURS reserves the right to cancel a presenter's poster session if the above requirements are not met. Sticky tack will be provided.</p>

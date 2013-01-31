@@ -3,7 +3,6 @@
 <head>
 <title>St. Louis Area Undergraduate Research Symposium</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" href="http://www.stlaurs.com/styles/main.css" />
 <style>
 .feedbackInput{color:inherit;border:1px solid #ddd;padding:5px;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px}
 label{font-size;13px;color:#666;display:block;line-height:1.5;}
@@ -16,6 +15,27 @@ label{font-size;13px;color:#666;display:block;line-height:1.5;}
 #send:hover{background-color:rgb(200,200,200);}
 </style>
 <script>
+	//Lets load the CSS!
+	function getCSS() {
+		url = "http://"+window.location.host+"/styles/main.css";
+
+		var $ = document; // shortcut
+		var cssId = 'stlaursCSS';  // you could encode the css path itself to generate id..
+		if (!$.getElementById(cssId))
+		{
+			var head  = $.getElementsByTagName('head')[0];
+			var link  = $.createElement('link');
+			link.id   = cssId;
+			link.rel  = 'stylesheet';
+			link.type = 'text/css';
+			link.href = url;
+			link.media = 'all';
+			head.appendChild(link);
+		}
+	}
+
+	getCSS();
+
 var Form={
 	validate:function(){
 		var ele;
@@ -67,17 +87,26 @@ var Form={
 		document.getElementById("email").value="";
 		document.getElementById("message").value="";
 	}
+
 }
 </script>
 </head>
 <body>
 <div id="grayStrip">
 	<div id="paper">
-		<div style="text-align:center;"><a href="http://www.stlaurs.com"><img src="http://www.stlaurs.com/img/banner.png" /></a></div>
+		<div style="text-align:center;"><a href="../"><img src="../img/banner.png" /></a></div>
 		<div id="contributors">
 		</div>
 		<div id="header">
-			<script src="http://www.stlaurs.com/scripts/header.js"></script>
+		<script type="text/javascript">
+			var js = document.createElement("script");
+			var gUrl = "http://"+window.location.host+"/";
+
+			js.type = "text/javascript";
+			js.src = gUrl+"scripts/header.js";
+
+			document.body.appendChild(js);
+		</script>
 			<div id="cornerLeft"></div>
 			<div id="cornerRight"></div>
 		</div>
