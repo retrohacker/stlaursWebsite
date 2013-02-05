@@ -1,4 +1,5 @@
-From: Jon Picchietti and William Blankenshop
+From: Jon Picchietti and William Blankenship
+
 To: Saint Louis Area Undergraduate Research Symposium
 
 TO DO:
