@@ -21,7 +21,6 @@
 			
 			include("/home/content/72/9635172/html/includes/database.php");
 
-			/*	Make sure that they get an email saying that they've been denied! Let em down softly.	*/
 			$email=$db->real_escape_string($_GET['e']);
 			$code=$db->real_escape_string($_GET['c']);
 			$response="That activation link didn't work. They are either approved/denied already or you have the wrong activation code.";
@@ -37,6 +36,8 @@
 
 					$db->query("UPDATE panel SET member='1' WHERE email='$email' LIMIT 1");
 					$db->query("DELETE FROM panel_activation WHERE email='$email' LIMIT 1");
+					
+					mail($email,"STLAURS Panel Application","Unfortunately, you have not been accepted as a StLaurs panel member.");
 				}
 			}
 

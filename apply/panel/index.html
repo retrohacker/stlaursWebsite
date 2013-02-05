@@ -116,8 +116,10 @@ loaded:0,
 		if(regex.test(document.getElementById("resume").value)){
 			document.getElementById("feedback").innerHTML="Uploading resume...";
 			var email=document.getElementById("email");
+			var dolly=email.cloneNode(true);
+			dolly.type="hidden";
 			var fUpload=document.getElementById("fUpload");
-			if(email.value!="") fUpload.appendChild(email.cloneNode(true));
+			if(email.value!="") fUpload.appendChild(dolly);
 			fUpload.submit();
 		}
 		else

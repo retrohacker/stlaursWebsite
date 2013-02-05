@@ -20,7 +20,7 @@ include("/home/content/72/9635172/html/includes/database.php");
 	$headers.="From: ".$fName.' '.$lName." <".$email.">";
 
 	$code=hash("sha512",rand(0,99999999));
-	$html='<html><body>'.$fName.' '.$lName.' is applying to be a panel member for '.$university.'<p><a href="http://www.stlaurs.com/apply/resumes/'.$resume.'">'.$fName."'s Resume</a></p><p>Previous experience(s) at StLaurs<br />".$question1.'</p><p>The purpose of StLaurs/This event should accomplish<br />'.$question2.'</p><p><a href="http://www.stlaurs.com/apply/panel/yes.php?e='.$email.'&c='.$code.'">To <b>approve</b> this person as a panel member: click this.</a></p>'.'</p><p><a href="http://www.stlaurs.com/apply/panel/no.php?e='.$email.'&c='.$code.'">To <b>deny</b> this person as a panel member: click this.</a></p></body></html>';
+	$html='<html><body>'.$fName.' '.$lName.' is applying to be a panel member for '.$university.'<p><a href="http://www.stlaurs.com/apply/panel/resumes/'.$resume.'">'.$fName."'s Resume</a></p><p>Previous experience(s) at StLaurs<br />".$question1.'</p><p>The purpose of StLaurs/This event should accomplish<br />'.$question2.'</p><p><a href="http://www.stlaurs.com/apply/panel/yes.php?e='.$email.'&c='.$code.'">To <b>approve</b> this person as a panel member: click this.</a></p>'.'</p><p><a href="http://www.stlaurs.com/apply/panel/no.php?e='.$email.'&c='.$code.'">To <b>deny</b> this person as a panel member: click this.</a></p></body></html>';
 
 	mail("jonpicchietti@gmail.com","STLAURS Panel Application",$html,$headers);
 	

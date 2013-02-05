@@ -21,7 +21,6 @@
 			
 			include("/home/content/72/9635172/html/includes/database.php");
 
-			/*	Make sure that they get an email saying that they've been approved!	*/
 			$email=$db->real_escape_string($_GET['e']);
 			$code=$db->real_escape_string($_GET['c']);
 			$response="That activation link didn't work. They are either approved/denied already or you have the wrong activation code.";
@@ -37,6 +36,8 @@
 
 					$db->query("UPDATE panel SET member='2' WHERE email='$email'");
 					$db->query("DELETE FROM panel_activation WHERE email='$email'");
+					
+					mail($email,"STLAURS Panel Application","Congratulations! you've been accepted as a StLaurs panel member!");
 				}
 			}
 
