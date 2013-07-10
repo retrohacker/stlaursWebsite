@@ -4,15 +4,7 @@
 <title>St. Louis Area Undergraduate Research Symposium</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
-.feedbackInput{color:inherit;border:1px solid #ddd;padding:5px;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px}
-label{font-size;13px;color:#666;display:block;line-height:1.5;}
-#form{width:390px;margin:0 auto;}
-#first{width:140px;margin-right:10px;}
-#last{width:205px;}
-#email{width:370px;}
-#message{width:370px;height:200px;}
-#send{margin:10px 0;border:1px solid rgb(150,150,150);padding:7px 15px;background-color:rgb(230,230,230);font:13px Arial bold;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px}
-#send:hover{background-color:rgb(200,200,200);}
+#gform{height:600px; width:99%; border:0; margin:0; auto;}
 </style>
 <script>
 	//Lets load the CSS!
@@ -35,60 +27,6 @@ label{font-size;13px;color:#666;display:block;line-height:1.5;}
 	}
 
 	getCSS();
-
-var Form={
-	validate:function(){
-		var ele;
-		var valid=true;
-		for(i=0,y=arguments.length;i<y;i++){
-			ele=document.getElementById(arguments[i]);
-			if(ele.value=="" && ele.style.borderColor!="#f00"){
-				this.invalid(ele);
-				valid=false;
-			}
-		}
-		
-		return valid;
-	},
-	
-	invalid:function(ele){
-		ele.style.borderColor="#f00";
-		ele.addEventListener("keypress",function(){Form.removeCheck(this);},false);
-	},
-	
-	removeCheck:function(ele){
-		ele.style.borderColor="#ddd";
-		ele.removeEventListener("keypress",function(){Form.removeCheck(this);},false);
-	},
-
-	submit:function(){
-		if(!this.validate("first","last","email","message")) return;
-		document.getElementById("send").disabled=true;
-		var anonymous, first, last, email, message;
-		first=document.getElementById("first").value;
-		last=document.getElementById("last").value;
-		email=document.getElementById("email").value;
-		message=document.getElementById("message").value;
-		var xhreq=new XMLHttpRequest();
-		xhreq.open("POST", "email.php", true);
-		xhreq.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xhreq.send("email="+email+"&first="+first+"&last="+last+"&email="+email+"&message="+message);
-		xhreq.onreadystatechange=function(){if(xhreq.status==200 && xhreq.readyState==4){
-			//alert("email sent!");
-			Form.reset();
-			document.getElementById("send").disabled=false;
-		}};
-		
-	},
-	
-	reset:function(){
-		document.getElementById("first").value="";
-		document.getElementById("last").value="";
-		document.getElementById("email").value="";
-		document.getElementById("message").value="";
-	}
-
-}
 </script>
 </head>
 <body>
@@ -111,22 +49,9 @@ var Form={
 			<div id="cornerRight"></div>
 		</div>
 		<div id="content">
-			<div id="form">
-				<h2>Questions? Comments? Feel free to tell us!</h2>
-				<label for="first">Name</label>
-				<input type="text" id="first" class="feedbackInput" placeholder="First Name" />
-				<input type="text" id="last" class="feedbackInput" placeholder="Last Name" />
-				<p>
-					<label for="email" title="Your email will not be kept.">Email</label>
-					<input type="text" id="email" class="feedbackInput" />
-				</p>
-				<p>
-					<label for="message">Message</label>
-					<textarea id="message" class="feedbackInput"></textarea>
-				</p>
-				<input type="button" value="Send" id="send" onclick="Form.submit();" />
-			</div>
+			<iframe id="gform" src="https://docs.google.com/forms/d/1ItpZ3FHTNcCMy6IOnhwiV4fWP4A2STVrNweE1Ku5mgk/viewform"/>
 		</div>
 	</div>
 </div>
-</body></html>
+</body>
+</html>
